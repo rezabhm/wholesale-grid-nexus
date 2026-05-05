@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { Filter, Grid, List, PackageX } from "lucide-react";
+import { ChevronDown, PackageX, SlidersHorizontal, X } from "lucide-react";
 import ProductCard from "@/features/products/ProductCard";
 import { ProductCardSkeleton, EmptyState } from "@/components/States";
 import { products, categories } from "@/services/mock";
@@ -19,6 +19,7 @@ export default function ProductList() {
   const [moq, setMoq] = useState<number | null>(null);
   const [country, setCountry] = useState<string | null>(null);
   const [sort, setSort] = useState("popular");
+  const [showFilters, setShowFilters] = useState(true);
 
   const { data, isLoading } = useQuery({
     queryKey: ["products"],
@@ -39,45 +40,86 @@ export default function ProductList() {
     return list;
   }, [data, cat, q, priceMin, priceMax, moq, country, sort]);
 
+  const activeFilters = [
+    cat && { label: categories.find((c) => c.id === cat)?.name ?? cat, clear: () => setParams({}) },
+    q && { label: `"${q}"`, clear: () => setParams({}) },
+    moq && { label: `≤ ${moq} MOQ`, clear: () => setMoq(null) },
+    country && { label: country, clear: () => setCountry(null) },
+    (priceMin || priceMax) && { label: `$${priceMin || 0} – $${priceMax || "∞"}`, clear: () => { setPriceMin(""); setPriceMax(""); } },
+  ].filter(Boolean) as { label: string; clear: () => void }[];
+
   return (
-    <div className="container-bb py-4">
-      {/* Breadcrumb */}
-      <div className="text-xs text-muted-foreground mb-3">
-        Home / Products {cat && `/ ${categories.find((c) => c.id === cat)?.name}`}
+    <div className="container-bb py-8">
+      {/* Header */}
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div>
+          <p className="text-xs text-muted-foreground">Marketplace {cat && `· ${categories.find((c) => c.id === cat)?.name}`}</p>
+          <h1 className="text-2xl font-bold tracking-tight mt-1">
+            {isLoading ? "Loading…" : `${filtered.length.toLocaleString()} products`}
+          </h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowFilters((v) => !v)}
+            className="lg:hidden inline-flex items-center gap-1.5 h-9 px-3 text-sm rounded-md border border-border hover:border-primary"
+          >
+            <SlidersHorizontal className="h-4 w-4" /> Filters
+          </button>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="h-9 px-3 text-sm rounded-md border border-border bg-background outline-none focus:border-primary"
+          >
+            <option value="popular">Most popular</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+          </select>
+        </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-4">
-        {/* Sidebar filters */}
-        <aside className="col-span-12 lg:col-span-3 space-y-4">
-          <div className="bg-card border border-border">
-            <div className="p-3 border-b border-border flex items-center gap-2 font-semibold text-sm">
-              <Filter className="h-4 w-4" /> Filters
-            </div>
+      {activeFilters.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-5">
+          {activeFilters.map((f, i) => (
+            <button key={i} onClick={f.clear} className="badge bg-primary-soft text-primary border-primary/20 hover:bg-primary/10">
+              {f.label} <X className="h-3 w-3" />
+            </button>
+          ))}
+        </div>
+      )}
 
-            <FilterGroup title="Category">
-              <button onClick={() => setParams({})} className={`block w-full text-left text-xs py-1 hover:text-primary ${!cat ? "text-primary font-medium" : "text-muted-foreground"}`}>All categories</button>
+      <div className="grid grid-cols-12 gap-6">
+        {/* Filters */}
+        <aside className={`col-span-12 lg:col-span-3 ${showFilters ? "block" : "hidden"} lg:block`}>
+          <div className="card-soft p-4 sticky top-20 space-y-1">
+            <FilterGroup title="Category" defaultOpen>
+              <button
+                onClick={() => setParams({})}
+                className={`block w-full text-left text-sm py-1.5 px-2 rounded hover:bg-muted ${!cat ? "text-primary font-medium bg-primary-soft" : ""}`}
+              >
+                All categories
+              </button>
               {categories.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => setParams({ category: c.id })}
-                  className={`block w-full text-left text-xs py-1 hover:text-primary ${cat === c.id ? "text-primary font-medium" : "text-foreground"}`}
+                  className={`block w-full text-left text-sm py-1.5 px-2 rounded hover:bg-muted ${cat === c.id ? "text-primary font-medium bg-primary-soft" : "text-foreground"}`}
                 >
                   {c.name}
                 </button>
               ))}
             </FilterGroup>
 
-            <FilterGroup title="Price (USD)">
+            <FilterGroup title="Price (USD)" defaultOpen>
               <div className="flex gap-2 items-center">
-                <input value={priceMin} onChange={(e) => setPriceMin(e.target.value)} type="number" placeholder="Min" className="w-full border border-border h-8 px-2 text-xs outline-none focus:border-primary" />
-                <span className="text-muted-foreground">-</span>
-                <input value={priceMax} onChange={(e) => setPriceMax(e.target.value)} type="number" placeholder="Max" className="w-full border border-border h-8 px-2 text-xs outline-none focus:border-primary" />
+                <input value={priceMin} onChange={(e) => setPriceMin(e.target.value)} type="number" placeholder="Min" className="input-bb h-9" />
+                <span className="text-muted-foreground text-xs">–</span>
+                <input value={priceMax} onChange={(e) => setPriceMax(e.target.value)} type="number" placeholder="Max" className="input-bb h-9" />
               </div>
             </FilterGroup>
 
-            <FilterGroup title="Min. Order Quantity">
+            <FilterGroup title="Min. order quantity">
               {moqOptions.map((m) => (
-                <label key={m} className="flex items-center gap-2 text-xs py-0.5 cursor-pointer">
+                <label key={m} className="flex items-center gap-2 text-sm py-1 cursor-pointer">
                   <input type="radio" name="moq" checked={moq === m} onChange={() => setMoq(m)} className="accent-primary" />
                   ≤ {m} pieces
                 </label>
@@ -85,9 +127,9 @@ export default function ProductList() {
               {moq && <button onClick={() => setMoq(null)} className="text-xs text-primary mt-1">Clear</button>}
             </FilterGroup>
 
-            <FilterGroup title="Supplier Country">
+            <FilterGroup title="Supplier country">
               {countries.map((c) => (
-                <label key={c} className="flex items-center gap-2 text-xs py-0.5 cursor-pointer">
+                <label key={c} className="flex items-center gap-2 text-sm py-1 cursor-pointer">
                   <input type="radio" name="country" checked={country === c} onChange={() => setCountry(c)} className="accent-primary" />
                   {c}
                 </label>
@@ -99,38 +141,14 @@ export default function ProductList() {
 
         {/* Main */}
         <section className="col-span-12 lg:col-span-9">
-          <div className="bg-card border border-border p-3 flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Sort by:</span>
-              {[
-                { v: "popular", l: "Popular" },
-                { v: "price-asc", l: "Price ↑" },
-                { v: "price-desc", l: "Price ↓" },
-              ].map((s) => (
-                <button
-                  key={s.v}
-                  onClick={() => setSort(s.v)}
-                  className={`px-3 h-8 border ${sort === s.v ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:border-primary"}`}
-                >
-                  {s.l}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span>{filtered.length} results</span>
-              <Grid className="h-4 w-4" />
-              <List className="h-4 w-4 opacity-50" />
-            </div>
-          </div>
-
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {Array.from({ length: 12 }).map((_, i) => <ProductCardSkeleton key={i} />)}
             </div>
           ) : filtered.length === 0 ? (
             <EmptyState title="No products match your filters" description="Try removing some filters or browsing other categories." icon={PackageX} />
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {filtered.map((p) => <ProductCard key={p.id} product={p} />)}
             </div>
           )}
@@ -140,11 +158,15 @@ export default function ProductList() {
   );
 }
 
-function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
+function FilterGroup({ title, children, defaultOpen = false }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="p-3 border-b border-border last:border-0">
-      <h4 className="font-medium text-xs uppercase tracking-wide text-muted-foreground mb-2">{title}</h4>
-      <div className="space-y-1 max-h-56 overflow-auto">{children}</div>
+    <div className="border-b border-border last:border-0 py-3">
+      <button onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between text-sm font-semibold">
+        {title}
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && <div className="mt-3 space-y-1 max-h-60 overflow-auto">{children}</div>}
     </div>
   );
 }

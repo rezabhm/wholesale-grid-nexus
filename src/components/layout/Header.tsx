@@ -1,118 +1,105 @@
-import { Link, NavLink } from "react-router-dom";
-import { Search, ShoppingCart, MessageSquare, User, Menu, Globe, ChevronDown } from "lucide-react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Search, MessageSquare, Bell, Menu, ChevronDown, Package2, LayoutGrid } from "lucide-react";
 import { useAuth, useUI } from "@/store";
 import { useState } from "react";
 import { categories } from "@/services/mock";
+import { BBButton } from "@/components/BBButton";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const setMobileMenu = useUI((s) => s.setMobileMenu);
   const mobileMenuOpen = useUI((s) => s.mobileMenuOpen);
   const [q, setQ] = useState("");
-  const [megaOpen, setMegaOpen] = useState(false);
+  const [catOpen, setCatOpen] = useState(false);
+  const nav = useNavigate();
 
   return (
-    <header className="sticky top-0 z-40 bg-background border-b border-border">
-      {/* Top utility bar */}
-      <div className="bg-surface-alt border-b border-border text-xs">
-        <div className="container-bb flex h-8 items-center justify-between text-muted-foreground">
-          <div className="flex items-center gap-4">
-            <span className="hidden sm:inline">Deliver to:</span>
-            <span className="flex items-center gap-1"><Globe className="h-3 w-3" /> Global</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link to="/dashboard" className="hover:text-primary">Buyer Center</Link>
-            <Link to="/" className="hidden md:inline hover:text-primary">Help</Link>
-            <span className="hidden md:inline">English-USD</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main bar */}
-      <div className="container-bb flex items-center gap-4 py-3">
-        <button className="lg:hidden p-2" onClick={() => setMobileMenu(!mobileMenuOpen)} aria-label="Menu">
+    <header className="sticky top-0 z-40 bg-background/85 backdrop-blur border-b border-border">
+      <div className="container-bb flex items-center gap-6 h-16">
+        <button className="lg:hidden p-2 -ml-2" onClick={() => setMobileMenu(!mobileMenuOpen)} aria-label="Menu">
           <Menu className="h-5 w-5" />
         </button>
 
-        <Link to="/" className="flex items-center gap-1 shrink-0">
-          <span className="text-2xl font-bold text-primary tracking-tight">Tradela</span>
-          <span className="text-[10px] text-muted-foreground hidden sm:block leading-3 ml-1">.com<br/>Wholesale</span>
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <div className="h-8 w-8 rounded-md bg-primary text-primary-foreground grid place-items-center">
+            <Package2 className="h-5 w-5" />
+          </div>
+          <span className="text-lg font-semibold tracking-tight">Tradela</span>
         </Link>
 
-        <form className="flex flex-1 max-w-3xl" onSubmit={(e) => { e.preventDefault(); window.location.href = `/products?q=${encodeURIComponent(q)}`; }}>
-          <div className="relative flex w-full border-2 border-primary rounded-sm overflow-hidden">
-            <select className="hidden sm:block bg-surface text-xs px-2 border-r border-border outline-none">
-              <option>Products</option>
-              <option>Suppliers</option>
-              <option>Quotes</option>
-            </select>
+        <nav className="hidden lg:flex items-center gap-1 text-sm">
+          <div
+            className="relative"
+            onMouseLeave={() => setCatOpen(false)}
+          >
+            <button
+              onMouseEnter={() => setCatOpen(true)}
+              className="flex items-center gap-1.5 px-3 h-9 rounded-md text-foreground/80 hover:text-foreground hover:bg-muted"
+            >
+              <LayoutGrid className="h-4 w-4" /> Categories <ChevronDown className="h-3.5 w-3.5" />
+            </button>
+            {catOpen && (
+              <div className="absolute left-0 top-full pt-2 w-[260px] z-50">
+                <div className="bg-popover border border-border rounded-lg shadow-lg p-1.5">
+                  {categories.map((c) => (
+                    <Link
+                      key={c.id}
+                      to={`/products?category=${c.id}`}
+                      onClick={() => setCatOpen(false)}
+                      className="block px-3 py-2 text-sm rounded-md hover:bg-muted"
+                    >
+                      {c.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <NavLink to="/products" className="px-3 h-9 inline-flex items-center rounded-md text-foreground/80 hover:text-foreground hover:bg-muted">Marketplace</NavLink>
+          <NavLink to="/dashboard" className="px-3 h-9 inline-flex items-center rounded-md text-foreground/80 hover:text-foreground hover:bg-muted">Dashboard</NavLink>
+        </nav>
+
+        <form
+          className="flex-1 max-w-xl hidden md:flex"
+          onSubmit={(e) => { e.preventDefault(); nav(`/products?q=${encodeURIComponent(q)}`); }}
+        >
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               type="text"
-              placeholder="Search 200+ million products..."
-              className="flex-1 px-3 py-2 text-sm outline-none bg-background"
+              placeholder="Search products, suppliers, categories…"
+              className="w-full h-10 pl-9 pr-4 text-sm bg-muted/60 border border-transparent rounded-lg outline-none focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/15 transition"
             />
-            <button type="submit" className="bg-primary hover:bg-[hsl(var(--primary-hover))] text-primary-foreground px-5 flex items-center gap-1 text-sm font-medium">
-              <Search className="h-4 w-4" /> <span className="hidden sm:inline">Search</span>
-            </button>
           </div>
         </form>
 
-        <div className="flex items-center gap-1 sm:gap-3 text-xs">
-          <Link to="/dashboard" className="hidden sm:flex flex-col items-center hover:text-primary p-1">
-            <MessageSquare className="h-5 w-5" />
-            <span className="mt-0.5">Messages</span>
-          </Link>
-          <Link to="/dashboard" className="hidden sm:flex flex-col items-center hover:text-primary p-1">
-            <ShoppingCart className="h-5 w-5" />
-            <span className="mt-0.5">Orders</span>
-          </Link>
+        <div className="flex items-center gap-1 ml-auto">
           {user ? (
-            <button onClick={logout} className="flex flex-col items-center hover:text-primary p-1">
-              <User className="h-5 w-5" />
-              <span className="mt-0.5 max-w-[80px] truncate">{user.name}</span>
-            </button>
+            <>
+              <Link to="/dashboard/messages" className="p-2 rounded-md hover:bg-muted text-foreground/80" aria-label="Messages">
+                <MessageSquare className="h-5 w-5" />
+              </Link>
+              <button className="p-2 rounded-md hover:bg-muted text-foreground/80" aria-label="Notifications">
+                <Bell className="h-5 w-5" />
+              </button>
+              <div className="ml-2 flex items-center gap-2">
+                <Link to="/dashboard" className="h-8 w-8 rounded-full bg-primary text-primary-foreground grid place-items-center text-sm font-semibold">
+                  {user.name.charAt(0).toUpperCase()}
+                </Link>
+                <button onClick={logout} className="hidden sm:block text-xs text-muted-foreground hover:text-foreground">Sign out</button>
+              </div>
+            </>
           ) : (
-            <Link to="/login" className="flex flex-col items-center hover:text-primary p-1">
-              <User className="h-5 w-5" />
-              <span className="mt-0.5">Sign in</span>
-            </Link>
+            <>
+              <Link to="/login" className="text-sm px-3 h-9 inline-flex items-center rounded-md hover:bg-muted">Sign in</Link>
+              <BBButton size="sm" onClick={() => nav("/register")}>Get started</BBButton>
+            </>
           )}
         </div>
       </div>
 
-      {/* Category nav */}
-      <nav className="bg-surface border-t border-border hidden lg:block">
-        <div className="container-bb flex items-center gap-1 h-10 text-sm relative">
-          <button
-            onMouseEnter={() => setMegaOpen(true)}
-            onMouseLeave={() => setMegaOpen(false)}
-            className="flex items-center gap-1 bg-primary text-primary-foreground px-4 h-full font-medium"
-          >
-            <Menu className="h-4 w-4" /> All Categories <ChevronDown className="h-3 w-3" />
-
-            {megaOpen && (
-              <div className="absolute left-0 top-full bg-popover border border-border shadow-md w-[280px] text-left text-foreground z-50">
-                {categories.map((c) => (
-                  <Link
-                    key={c.id}
-                    to={`/products?category=${c.id}`}
-                    className="block px-4 py-2 hover:bg-accent hover:text-accent-foreground border-b border-border last:border-0"
-                  >
-                    {c.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </button>
-          {["Featured selections", "Trade Assurance", "Buyer Central", "Help Center", "Get the app", "Become a supplier"].map((l) => (
-            <NavLink key={l} to="/products" className="px-3 hover:text-primary text-foreground">{l}</NavLink>
-          ))}
-        </div>
-      </nav>
-
-      {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-border bg-popover">
           {categories.slice(0, 8).map((c) => (

@@ -5,14 +5,16 @@ export default function Modal({
   open,
   onClose,
   title,
+  subtitle,
   children,
   size = "md",
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
+  subtitle?: string;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
 }) {
   useEffect(() => {
     if (!open) return;
@@ -27,13 +29,23 @@ export default function Modal({
 
   if (!open) return null;
 
-  const w = size === "sm" ? "max-w-md" : size === "lg" ? "max-w-3xl" : "max-w-xl";
+  const w = { sm: "max-w-md", md: "max-w-xl", lg: "max-w-2xl", xl: "max-w-4xl" }[size];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/40" onClick={onClose}>
-      <div className={`bg-popover border border-border w-full ${w} max-h-[90vh] flex flex-col`} onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-          <h2 className="font-semibold text-foreground">{title}</h2>
-          <button onClick={onClose} className="p-1 hover:bg-surface-alt" aria-label="Close">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-sm animate-in fade-in"
+      onClick={onClose}
+    >
+      <div
+        className={`bg-popover border border-border rounded-xl shadow-lg w-full ${w} max-h-[90vh] flex flex-col overflow-hidden`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between px-6 py-4 border-b border-border">
+          <div>
+            <h2 className="font-semibold text-foreground">{title}</h2>
+            {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-muted text-muted-foreground" aria-label="Close">
             <X className="h-4 w-4" />
           </button>
         </div>
