@@ -42,7 +42,11 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          soft: "hsl(var(--accent-soft))",
+        },
+        "brand-accent": {
+          DEFAULT: "hsl(var(--brand-accent))",
+          foreground: "hsl(var(--brand-accent-foreground))",
+          soft: "hsl(var(--brand-accent-soft))",
         },
         "primary-soft": "hsl(var(--primary-soft))",
         popover: {

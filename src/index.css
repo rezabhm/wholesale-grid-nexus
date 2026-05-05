@@ -21,10 +21,13 @@
     --primary-hover: 230 65% 27%;
     --primary-soft: 230 65% 96%;
 
-    /* Soft orange accent (for actions / highlights only) */
-    --accent: 22 95% 55%;
-    --accent-foreground: 0 0% 100%;
-    --accent-soft: 22 100% 96%;
+    /* Soft orange — for emphasis / CTA highlights only */
+    --brand-accent: 22 95% 55%;
+    --brand-accent-foreground: 0 0% 100%;
+    --brand-accent-soft: 22 100% 96%;
+
+    --accent: 220 14% 94%;
+    --accent-foreground: 222 47% 11%;
 
     --secondary: 220 14% 96%;
     --secondary-foreground: 222 47% 11%;
@@ -78,9 +81,11 @@
     --primary-foreground: 222 47% 8%;
     --primary-hover: 230 80% 70%;
     --primary-soft: 230 50% 18%;
-    --accent: 22 95% 60%;
-    --accent-foreground: 0 0% 100%;
-    --accent-soft: 22 60% 16%;
+    --accent: 222 30% 18%;
+    --accent-foreground: 210 20% 95%;
+    --brand-accent: 22 95% 60%;
+    --brand-accent-foreground: 0 0% 100%;
+    --brand-accent-soft: 22 60% 16%;
     --secondary: 222 30% 16%;
     --secondary-foreground: 210 20% 95%;
     --muted: 222 30% 16%;
