@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ButtonHTMLAttributes, forwardRef } from "react";
+import { Loader2 } from "lucide-react";
 
 type Variant = "primary" | "accent" | "secondary" | "ghost" | "outline" | "danger";
 type Size = "sm" | "md" | "lg";
@@ -18,20 +19,30 @@ const sizes: Record<Size, string> = {
   lg: "h-12 px-6 text-base",
 };
 
-export const BBButton = forwardRef<
-  HTMLButtonElement,
-  ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size; full?: boolean }
->(({ variant = "primary", size = "md", full, className, ...props }, ref) => (
-  <button
-    ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center gap-2 font-medium rounded-md transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-      variants[variant],
-      sizes[size],
-      full && "w-full",
-      className,
-    )}
-    {...props}
-  />
-));
+export type BBButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: Variant;
+  size?: Size;
+  full?: boolean;
+  loading?: boolean;
+};
+
+export const BBButton = forwardRef<HTMLButtonElement, BBButtonProps>(
+  ({ variant = "primary", size = "md", full, loading, className, children, disabled, ...props }, ref) => (
+    <button
+      ref={ref}
+      disabled={disabled || loading}
+      className={cn(
+        "inline-flex items-center justify-center gap-2 font-medium rounded-md transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+        variants[variant],
+        sizes[size],
+        full && "w-full",
+        className,
+      )}
+      {...props}
+    >
+      {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+      {children}
+    </button>
+  ),
+);
 BBButton.displayName = "BBButton";

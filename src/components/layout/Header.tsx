@@ -4,6 +4,7 @@ import { useAuth, useUI } from "@/store";
 import { useState } from "react";
 import { categories } from "@/services/mock";
 import { BBButton } from "@/components/BBButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -76,6 +77,7 @@ export default function Header() {
         </form>
 
         <div className="flex items-center gap-1 ml-auto">
+          <ThemeToggle />
           {user ? (
             <>
               <Link to="/dashboard/messages" className="p-2 rounded-md hover:bg-muted text-foreground/80" aria-label="Messages">
