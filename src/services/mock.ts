@@ -13,7 +13,7 @@ export const categories: Category[] = [
   { id: "office", name: "Office Supplies", icon: "Briefcase", subcategories: ["Stationery", "Furniture", "Electronics"] },
 ];
 
-const suppliers: Supplier[] = [
+export const suppliers: Supplier[] = [
   { id: "s1", name: "Shenzhen Globaltech Co., Ltd.", country: "China", countryCode: "CN", years: 8, rating: 4.8, verified: true },
   { id: "s2", name: "Guangzhou Prime Industries", country: "China", countryCode: "CN", years: 12, rating: 4.7, verified: true },
   { id: "s3", name: "Mumbai Textiles Ltd.", country: "India", countryCode: "IN", years: 15, rating: 4.6, verified: true },
