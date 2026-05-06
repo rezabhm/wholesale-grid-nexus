@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -110,3 +110,7 @@
   .input-bb { @apply w-full h-10 px-3 text-sm bg-background border border-input rounded-md outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15; }
   .badge { @apply inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md border; }
 }
+
+/* RTL — Persian/Arabic typography + directional flips for icons that have meaning */
+html[dir="rtl"] body { font-family: 'Vazirmatn', 'Inter', ui-sans-serif, system-ui, sans-serif; }
+html[dir="rtl"] .rtl-flip { transform: scaleX(-1); }
