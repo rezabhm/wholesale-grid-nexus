@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "categories": "分类",
+    "marketplace": "市场",
+    "dashboard": "控制台",
+    "deals": "今日特惠",
+    "newArrivals": "新品上架"
+  },
+  "header": {
+    "searchPlaceholder": "搜索商品、品牌或供应商…",
+    "search": "搜索",
+    "signIn": "登录",
+    "getStarted": "立即开始",
+    "signOut": "退出登录",
+    "cart": "购物车",
+    "wishlist": "收藏夹",
+    "messages": "消息",
+    "notifications": "通知",
+    "account": "账户",
+    "language": "语言",
+    "theme": "主题",
+    "menu": "菜单"
+  },
+  "product": {
+    "moq": "起订量",
+    "outOfStock": "缺货",
+    "lowStock": "仅剩 {{count}} 件",
+    "inStock": "有货",
+    "addToCart": "加入购物车",
+    "addedToCart": "已加入购物车",
+    "quickView": "快速查看",
+    "addToWishlist": "加入收藏",
+    "removeFromWishlist": "取消收藏",
+    "save": "立省 {{percent}}%",
+    "sale": "特价",
+    "new": "新品",
+    "rating": "{{rating}} ({{reviews}})",
+    "from": "起"
+  },
+  "common": {
+    "loading": "加载中…",
+    "empty": "暂无内容"
+  }
+}

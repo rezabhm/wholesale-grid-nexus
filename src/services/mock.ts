@@ -24,17 +24,36 @@ export const suppliers: Supplier[] = [
 
 const img = (seed: string) => `https://picsum.photos/seed/${seed}/600/600`;
 
+const variantPalettes = [
+  [{ id: "blk", label: "Black", color: "#111827" }, { id: "wht", label: "White", color: "#f3f4f6" }, { id: "blu", label: "Blue", color: "#2563eb" }],
+  [{ id: "red", label: "Red", color: "#dc2626" }, { id: "grn", label: "Green", color: "#16a34a" }],
+  [{ id: "gld", label: "Gold", color: "#d4a84c" }, { id: "slv", label: "Silver", color: "#9ca3af" }, { id: "gun", label: "Graphite", color: "#374151" }, { id: "rose", label: "Rose", color: "#f472b6" }],
+];
+
 export const products: Product[] = Array.from({ length: 36 }).map((_, i) => {
   const cat = categories[i % categories.length];
   const sup = suppliers[i % suppliers.length];
   const basePrice = 2 + (i % 20) * 3.5;
+  const priceMin = +(basePrice * 0.8).toFixed(2);
+  const priceMax = +(basePrice * 1.4).toFixed(2);
+  // ~45% of products are discounted; a few are out of stock / low stock.
+  const hasDiscount = i % 7 !== 0 && i % 3 !== 0;
+  const discountPercent = hasDiscount ? [10, 15, 20, 25, 30, 35, 40, 50][i % 8] : 0;
+  const originalPrice = hasDiscount ? +(priceMax / (1 - discountPercent / 100)).toFixed(2) : undefined;
+  const stockSeed = i % 11;
+  const stock = stockSeed === 0 ? 0 : stockSeed <= 2 ? 3 + stockSeed : 50 + i * 7;
   return {
     id: `p${i + 1}`,
     title: `${cat.name.split(" ")[0]} Wholesale Item ${i + 1} - Factory Direct OEM Custom`,
     image: img(`prod${i}`),
     images: [img(`prod${i}`), img(`prod${i}a`), img(`prod${i}b`), img(`prod${i}c`), img(`prod${i}d`)],
-    priceMin: +(basePrice * 0.8).toFixed(2),
-    priceMax: +(basePrice * 1.4).toFixed(2),
+    priceMin,
+    priceMax,
+    originalPrice,
+    discountPercent,
+    stock,
+    isNew: i % 9 === 0,
+    variants: i % 2 === 0 ? variantPalettes[i % variantPalettes.length] : undefined,
     moq: [50, 100, 200, 500][i % 4],
     unit: "Pieces",
     supplier: sup,

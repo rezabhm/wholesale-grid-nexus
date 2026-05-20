@@ -27,6 +27,16 @@ export type Product = {
   tiers: PriceTier[];
   description: string;
   specs: { label: string; value: string }[];
+  /** Optional original price for showing a discount strikethrough. */
+  originalPrice?: number;
+  /** Discount % (computed-friendly). 0 / undefined means no discount. */
+  discountPercent?: number;
+  /** Units of stock left. 0 → out of stock; small number → low-stock indicator. */
+  stock: number;
+  /** Optional color/variant swatches for preview chips. */
+  variants?: { id: string; label: string; color: string }[];
+  /** Mark newly added items in the last 30 days. */
+  isNew?: boolean;
 };
 
 export type OrderStatus = "Open" | "Negotiating" | "Closed";
