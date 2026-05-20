@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "categories": "Categories",
+    "marketplace": "Marketplace",
+    "dashboard": "Dashboard",
+    "deals": "Today's Deals",
+    "newArrivals": "New Arrivals"
+  },
+  "header": {
+    "searchPlaceholder": "Search for products, brands, suppliers…",
+    "search": "Search",
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "signOut": "Sign out",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "account": "Account",
+    "language": "Language",
+    "theme": "Theme",
+    "menu": "Menu"
+  },
+  "product": {
+    "moq": "MOQ",
+    "outOfStock": "Out of stock",
+    "lowStock": "Only {{count}} left",
+    "inStock": "In stock",
+    "addToCart": "Add to cart",
+    "addedToCart": "Added to cart",
+    "quickView": "Quick view",
+    "addToWishlist": "Add to wishlist",
+    "removeFromWishlist": "Remove from wishlist",
+    "save": "Save {{percent}}%",
+    "sale": "Sale",
+    "new": "New",
+    "rating": "{{rating}} ({{reviews}})",
+    "from": "from"
+  },
+  "common": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet"
+  }
+}
