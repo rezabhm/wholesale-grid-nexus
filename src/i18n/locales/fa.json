@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "categories": "دسته‌بندی‌ها",
+    "marketplace": "بازار",
+    "dashboard": "داشبورد",
+    "deals": "تخفیف‌های امروز",
+    "newArrivals": "تازه‌ها"
+  },
+  "header": {
+    "searchPlaceholder": "جستجوی محصول، برند یا تأمین‌کننده…",
+    "search": "جستجو",
+    "signIn": "ورود",
+    "getStarted": "شروع کنید",
+    "signOut": "خروج",
+    "cart": "سبد خرید",
+    "wishlist": "علاقه‌مندی‌ها",
+    "messages": "پیام‌ها",
+    "notifications": "اعلان‌ها",
+    "account": "حساب کاربری",
+    "language": "زبان",
+    "theme": "تم",
+    "menu": "منو"
+  },
+  "product": {
+    "moq": "حداقل سفارش",
+    "outOfStock": "ناموجود",
+    "lowStock": "تنها {{count}} عدد باقی مانده",
+    "inStock": "موجود",
+    "addToCart": "افزودن به سبد",
+    "addedToCart": "به سبد اضافه شد",
+    "quickView": "نمایش سریع",
+    "addToWishlist": "افزودن به علاقه‌مندی",
+    "removeFromWishlist": "حذف از علاقه‌مندی",
+    "save": "{{percent}}٪ تخفیف",
+    "sale": "حراج",
+    "new": "جدید",
+    "rating": "{{rating}} ({{reviews}})",
+    "from": "از"
+  },
+  "common": {
+    "loading": "در حال بارگذاری…",
+    "empty": "هنوز چیزی اینجا نیست"
+  }
+}
